@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hulu Awesome App</title>
+    <link rel="stylesheet" href="css/heroModal.css" />
+    <style>
+      body {
+        background-color: #141414;
+        overflow: hidden;
+        font-family: Graphik,Helvetica,Arial,sans-serif;
+      }
+
+      .page {
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.5s ease;
+      }
+
+      .carousel-container {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+        padding: 10px 50px;
+      }
+
+      .carousel-inner {
+        display: flex;
+        transition: transform 0.5s ease;
+      }
+
+      .carousel-header {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding-left: 60px;
+        letter-spacing: 1px;
+      }
+
+      .carousel-delimiter {
+        height: 100%;
+        width: 0px;
+        border: 1px solid gray;
+        margin: 0 10px;
+      }
+
+      .tile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease-in-out;
+        margin: 5px;
+        border-radius: 14px;
+      }
+      .tile.focused {
+        box-shadow: 0 0 0 6px orange;
+      }
+
+      .tile img {
+        transition: all 0.3s ease-in-out;
+        width: 97%;
+        height: 97%;
+        object-fit: cover;
+        border-radius: 13px;
+      }
+
+      .tile.focused img {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <script
+      type="text/javascript"
+      src="js/common/HTMLElementGenerator.js"
+    ></script>
+    <script type="text/javascript" src="js/common/CONFIG.js"></script>
+    <script type="text/javascript" src="js/common/focusManager.js"></script>
+    <script type="text/javascript" src="js/components/BaseTile.js"></script>
+    <script type="text/javascript" src="js/components/HeroModal.js"></script>
+    <script
+      type="text/javascript"
+      src="js/components/ExpandableTile.js"
+    ></script>
+    <script type="text/javascript" src="js/components/Tile.js"></script>
+    <script
+      type="text/javascript"
+      src="js/components/ResizableTile.js"
+    ></script>
+    <script type="text/javascript" src="js/components/Carousel.js"></script>
+    <script type="text/javascript" src="js/utils/parseData.js"></script>
+    <script type="text/javascript" src="js/utils/fetchCarousel.js"></script>
+    <script type="text/javascript" src="js/utils/fetchHome.js"></script>
+  </head>
+  <body>
+    <div class="page" id="app"></div>
+    <div class="overlay" id="overlay"></div>
+    <div id="modal"></div>
+
+    <script>
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+      window.onload = function () {
+        window.scrollTo(0, 0);
+      };
+
+      const appDataStore = {
+        heroModalInfo: {
+          visible: false,
+        },
+        focusManager: new FocusManager(),
+      };
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") {
+          appDataStore.focusManager.navigateRight();
+        } else if (e.key === "ArrowLeft") {
+          appDataStore.focusManager.navigateLeft();
+        } else if (e.key === "ArrowUp") {
+          appDataStore.focusManager.navigateUp();
+        } else if (e.key === "ArrowDown") {
+          appDataStore.focusManager.navigateDown();
+        }
+      });
+
+      const modal = document.getElementById("modal");
+      const overlay = document.getElementById("overlay");
+
+      const { modalElement, modalFocusElement, modalImg, modalDescription, modalTitle } = createHeroModal();
+      modal.appendChild(modalElement);
+
+      document.addEventListener("keydown", (event) => {
+        // Hide
+        if (event.keyCode === 46 || event.keyCode === 8) {
+          if (appDataStore.heroModalInfo.visible) {
+            appDataStore.heroModalInfo.visible = false;
+            modalElement.classList.remove("active");
+            overlay.classList.remove("active");
+            appDataStore.focusManager.exitPage();
+          }
+        }
+        // Show
+        if (event.key === "Enter") {
+          if (!appDataStore.heroModalInfo.visible) {
+            appDataStore.heroModalInfo.visible = true;
+            modalElement.classList.add("active");
+            overlay.classList.add("active");
+            appDataStore.focusManager.pushPage(modalFocusElement);
+            modalImg.src = appDataStore.heroModalInfo.heroImage;
+            modalTitle.innerText = appDataStore.heroModalInfo.title;
+            modalDescription.innerText = appDataStore.heroModalInfo.description;
+            modalElement.style.opacity = 1;
+          }
+        }
+      });
+
+      const app = document.getElementById("app");
+
+      const carousel_mapping = [
+        "LANDSCAPE_LARGE",
+        "PORTRAIT_LARGE",
+        "EXPANDABLE",
+        "BANNER_ROW",
+        "PORTRAIT_LARGE",
+        "EXPANDABLE",
+        "LANDSCAPE_LARGE",
+        "PORTRAIT_LARGE",
+        "EXPANDABLE",
+        "LANDSCAPE_LARGE",
+        "PORTRAIT_LARGE",
+        "EXPANDABLE",
+        "LANDSCAPE_LARGE",
+        "PORTRAIT_LARGE",
+        "EXPANDABLE",
+      ];
+
+      const drawUI = (data, isRow) => {
+        const focusTree = {
+          focusIndex: 0,
+          items: [],
+          direction: "column",
+          loop: 0,
+          focus: function () {
+            let offset = this.focusIndex * 460;
+            app.style.transform = `translateY(${-offset}px)`;
+          },
+        };
+
+        data.forEach((row, index) => {
+          const { domElement, focusElement } = createCarouselNode(
+            row,
+            carousel_mapping[index]
+          );
+          app.appendChild(domElement);
+          focusTree.items.push(focusElement);
+        });
+
+        if (!isRow) {
+          appDataStore.focusManager.pushPage(focusTree);
+        } else {
+          appDataStore.focusManager.appendItemsToTree(focusTree.items);
+        }
+      };
+
+      fetchData();
+    </script>
+  </body>
+</html>

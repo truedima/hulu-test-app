@@ -1,0 +1,89 @@
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 1100;
+  height: 620;
+  background-color: rgba(0, 0, 0);
+  transform: translate(-50%, -50%);
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.modal.active {
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1); /* Reset scaling */
+}
+
+.modal img {
+  max-width: 100%;
+  max-height: 90%;
+  border-radius: 8px;
+}
+
+.modal .title {
+  margin-top: 15px;
+  margin-right: auto;
+  padding-left: 35px;
+  font-size: 30px;
+  font-weight: bold;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+}
+
+.description {
+  padding: 10px 35px;
+  margin-right: auto;
+  margin-top: 15px;
+  font-size: 18px;
+  color: white;
+}
+
+.overlay {
+  display: none; /* Hidden by default */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  z-index: 999; /* Ensure it sits beneath the modal */
+  transition: opacity 0.3s ease; /* Smooth fade-in effect */
+  opacity: 0;
+}
+
+.overlay.active {
+  display: block; /* Make both modal and overlay visible */
+  opacity: 1; /* Fade in */
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around; /* Space buttons evenly */
+  margin-top: 15px; /* Add space above the buttons */
+}
+
+.modal button {
+  padding: 10px 20px;
+  margin: 5px 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: white; /* Default button color */
+  color: black;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.focused {
+  background-color: orange; /* Darker shade on hover */
+}

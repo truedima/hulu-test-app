@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shifting Carousel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #141414;
+    }
+
+    .carousel-container {
+      display: flex;
+      align-items: center;
+      width: 1000;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .carousel-inner {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .carousel-item {
+      flex: 0 0 auto;
+      width: 200px;
+      height: 300px;
+      margin-right: 15px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .carousel-item.focused {
+      width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div class="carousel-container">
+    <div class="carousel-inner" id="carousel">
+      <div class="carousel-item focused">
+        <img src="https://img2.hulu.com/user/v3/artwork/565d8976-9d26-4e63-866c-40f8a137ce5f?base_image_bucket_name=image_manager&base_image=38d4453f-88b0-4c88-8a22-79730f13e41b&size=1920x1080&format=jpeg" alt="Focused Image">
+      </div>
+      <div class="carousel-item">
+        <img src="https://img2.hulu.com/user/v3/artwork/565d8976-9d26-4e63-866c-40f8a137ce5f?base_image_bucket_name=image_manager&base_image=b0629231-5f45-4b43-83a5-1aec45bd14bc&size=200x300&format=jpeg" alt="Unfocused Image">
+      </div>
+      <div class="carousel-item">
+        <img src="https://img2.hulu.com/user/v3/artwork/565d8976-9d26-4e63-866c-40f8a137ce5f?base_image_bucket_name=image_manager&base_image=b0629231-5f45-4b43-83a5-1aec45bd14bc&size=200x300&format=jpeg" alt="Unfocused Image">
+      </div>
+      <div class="carousel-item">
+        <img src="https://img2.hulu.com/user/v3/artwork/565d8976-9d26-4e63-866c-40f8a137ce5f?base_image_bucket_name=image_manager&base_image=b0629231-5f45-4b43-83a5-1aec45bd14bc&size=200x300&format=jpeg" alt="Unfocused Image">
+      </div>
+      <div class="carousel-item">
+        <img src="https://img2.hulu.com/user/v3/artwork/565d8976-9d26-4e63-866c-40f8a137ce5f?base_image_bucket_name=image_manager&base_image=b0629231-5f45-4b43-83a5-1aec45bd14bc&size=200x300&format=jpeg" alt="Unfocused Image">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const carousel = document.getElementById('carousel');
+    const items = Array.from(carousel.children);
+
+    let currentIndex = 0;
+    const itemWidth = 200; // Width of unfocused item
+    const focusedWidth = 600; // Width of focused item
+
+    const focusedImage = "https://img2.hulu.com/user/v3/artwork/565d8976-9d26-4e63-866c-40f8a137ce5f?base_image_bucket_name=image_manager&base_image=38d4453f-88b0-4c88-8a22-79730f13e41b&size=1920x1080&format=jpeg";
+    const unfocusedImage = "https://img2.hulu.com/user/v3/artwork/565d8976-9d26-4e63-866c-40f8a137ce5f?base_image_bucket_name=image_manager&base_image=b0629231-5f45-4b43-83a5-1aec45bd14bc&size=200x300&format=jpeg";
+
+    function updateFocus(index) {
+      const offset = -index * itemWidth - Math.max(0, 100+ index * (focusedWidth - itemWidth));
+      carousel.style.transform = `translateX(${offset}px)`;
+
+      items.forEach((item, i) => {
+        const img = item.querySelector('img');
+        if (i === index) {
+          item.classList.add('focused');
+          img.src = focusedImage;
+        } else {
+          item.classList.remove('focused');
+          img.src = unfocusedImage;
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        currentIndex = (currentIndex + 1) % items.length;
+        updateFocus(currentIndex);
+      } else if (e.key === 'ArrowLeft') {
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        updateFocus(currentIndex);
+      }
+    });
+
+    updateFocus(currentIndex); // Initialize focus
+  </script>
+</body>
+</html>

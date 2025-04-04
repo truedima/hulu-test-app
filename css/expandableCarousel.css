@@ -1,0 +1,30 @@
+.carousel-container-exp {
+    display: flex;
+    align-items: center;
+    width: 1000;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .carousel-inner-exp {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+
+  .carousel-item-exp {
+    flex: 0 0 auto;
+    width: 200px;
+    height: 300px;
+    margin-right: 15px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .carousel-item-exp img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .carousel-item-exp.focused {
+    width: 600px;
+  }

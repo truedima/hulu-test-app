@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expandable Sidebar Menu</title>
+  <style>
+    /* Basic Reset */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+    }
+
+    /* Left Sidebar */
+    .sidebar {
+      width: 80px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background-color: #222;
+      transition: width 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Expanded Sidebar */
+    .sidebar:focus-within,
+    .sidebar:hover {
+      width: 200px;
+    }
+
+    /* Menu Items */
+    .menu-item {
+      color: white;
+      text-decoration: none;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      transition: opacity 0.3s ease;
+      opacity: 0.7;
+    }
+    .menu-item:hover {
+      opacity: 1;
+    }
+
+    /* Menu Icons */
+    .menu-item i {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+
+    /* Menu Text */
+    .menu-text {
+      font-size: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* Hide Text Initially */
+    .sidebar:hover .menu-text {
+      visibility: visible;
+    }
+  </style>
+</head>
+<body>
+    <img class="grid__item-image js-grid__item-image grid__item-image-lazy js-lazy grid__item-trigger image-loaded" loading="lazy" src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200_webp/6d4127197870091.66382238e1d10.gif" alt="" id="221315345" srcset="https://mir-s3-cdn-cf.behance.net/project_modules/disp/6d4127197870091.66382238e1d10.gif 600w,https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/6d4127197870091.66382238e1d10.gif 832w," sizes="538px">
+  <!-- Sidebar Menu -->
+  <nav class="sidebar" tabindex="0">
+    <a class="menu-item" href="#">
+      <i>🔍</i>
+      <span class="menu-text">Search</span>
+    </a>
+    <a class="menu-item" href="#">
+      <i>🎥</i>
+      <span class="menu-text">Movie</span>
+    </a>
+    <a class="menu-item" href="#">
+      <i>📺</i>
+      <span class="menu-text">TV Show</span>
+    </a>
+  </nav>
+</body>
+</html>
